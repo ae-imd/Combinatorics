@@ -2,6 +2,7 @@
 #define __IMD_COMBINATORICS_
 
 #include <cmath>
+#include <string>
 #include <iostream>
 
 namespace IMD
@@ -172,24 +173,21 @@ namespace IMD
         void reset() noexcept;
     };
 
-    size_t **Pascal_triangle(size_t rows_amount);
-    size_t *Pascal_triangle_row(size_t row_index);
-
     // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
-    size_t Pascal_binomial_coefficient(size_t k, size_t n);
+    unsigned long long **Pascal_triangle(size_t rows_amount);
     // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
-    size_t iterative_binomial_coefficient(size_t k, size_t n);
+    unsigned long long *Pascal_triangle_row(size_t row_index);
 
-    size_t Josephus_recursive_problem(size_t k, size_t n);
-    size_t Josephus_iterative_problem(size_t k, size_t n);
+    unsigned long long Pascal_binomial_coefficient(size_t k, size_t n);
+    unsigned long long iterative_binomial_coefficient(size_t k, size_t n);
 
-    constexpr size_t recursive_factorial(size_t num)
+    constexpr unsigned long long recursive_factorial(size_t num)
     {
         if (num == 0 || num == 1)
             return 1;
         return num * recursive_factorial(num - 1);
     }
-    constexpr size_t iterative_factorial(size_t num)
+    constexpr unsigned long long iterative_factorial(size_t num)
     {
         size_t res(1);
         for (size_t i(2); i <= num; ++i)
@@ -197,9 +195,20 @@ namespace IMD
         return res;
     }
 
+    constexpr unsigned long long non_negative_power_of_two(long long power)
+    {
+        return 1 << power;
+    }
+
+    size_t Josephus_recursive_problem(size_t k, size_t n);
+    size_t Josephus_iterative_problem(size_t k, size_t n);
+
     void Hanoi_classic_recursive_problem(size_t n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
     void Hanoi_classic_iterative_problem(size_t n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
     void Hanoi_restricted_recursive_problem(size_t n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
+
+    unsigned long long surjective_mappings_inclusion_exclusion(size_t n, size_t m);
+    std::string binomial_formula(size_t n);
 
 }
 

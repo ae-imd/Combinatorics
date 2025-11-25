@@ -1,5 +1,7 @@
 #include <stdexcept>
 #include <ostream>
+#include <string>
+#include <sstream>
 #include <stack>
 #include <tuple>
 #include "../include/combinatorics.h"
@@ -518,7 +520,7 @@ void IMD::Catalan_numbers::reset() noexcept
 }
 
 // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
-size_t **IMD::Pascal_triangle(size_t rows_amount)
+unsigned long long **IMD::Pascal_triangle(size_t rows_amount)
 {
     size_t **res = new size_t *[rows_amount];
     for (size_t i(0); i < rows_amount; ++i)
@@ -535,7 +537,7 @@ size_t **IMD::Pascal_triangle(size_t rows_amount)
     return res;
 }
 // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
-size_t *IMD::Pascal_triangle_row(size_t row_index)
+unsigned long long *IMD::Pascal_triangle_row(size_t row_index)
 {
     size_t *res = new size_t[row_index + 1];
     res[0] = (1);
@@ -550,7 +552,7 @@ size_t *IMD::Pascal_triangle_row(size_t row_index)
     return res;
 }
 
-size_t IMD::Pascal_binomial_coefficient(size_t k, size_t n)
+unsigned long long IMD::Pascal_binomial_coefficient(size_t k, size_t n)
 {
     if (k > n)
         throw std::invalid_argument("The argument 'k' is more than the argument 'n'");
@@ -566,7 +568,7 @@ size_t IMD::Pascal_binomial_coefficient(size_t k, size_t n)
     delete[] tmp;
     return res;
 }
-size_t IMD::iterative_binomial_coefficient(size_t k, size_t n)
+unsigned long long IMD::iterative_binomial_coefficient(size_t k, size_t n)
 {
     if (k > n)
         throw std::invalid_argument("The argument 'k' is more than the argument 'n'");
@@ -662,4 +664,75 @@ void IMD::Hanoi_restricted_recursive_problem(size_t n, char from, char to, char 
     os << "Move the " << n << " disk from " << aux << " to " << to << sep;
     ++moves;
     Hanoi_restricted_recursive_problem(n - 1, from, to, aux, moves, os, sep);
+}
+unsigned long long IMD::surjective_mappings_inclusion_exclusion(size_t n, size_t m)
+{
+    if (m == 0)
+        return (n == 0) ? 1 : 0;
+    if (n < m)
+        return 0;
+
+    size_t result(0);
+    char sign(1);
+
+    for (size_t i(0); i <= m; ++i)
+    {
+        size_t elem = iterative_binomial_coefficient(i, m);
+
+        size_t power = 1;
+        for (size_t j(0); j < n; ++j)
+            power *= (m - i);
+        elem *= power;
+
+        if (sign > 0)
+            result += elem;
+        else
+            result -= elem;
+
+        sign = -sign;
+    }
+
+    return result;
+}
+
+std::string IMD::binomial_formula(size_t n)
+{
+    if (n == 0)
+        return "1";
+    if (n == 1)
+        return "a + b";
+
+    std::ostringstream oss;
+    oss << "(a + b)^" << n << " = ";
+
+    for (size_t k = 0; k <= n; ++k)
+    {
+        size_t coeff = iterative_binomial_coefficient(k, n);
+
+        if (k > 0)
+            oss << " + ";
+
+        if (coeff > 1)
+            oss << coeff;
+
+        if (k < n)
+        {
+            if (coeff > 1)
+                oss << "*";
+            oss << "a";
+            if (n - k > 1)
+                oss << "^" << (n - k);
+        }
+
+        if (k > 0)
+        {
+            if (coeff > 1 && k < n)
+                oss << "*";
+            oss << "b";
+            if (k > 1)
+                oss << "^" << k;
+        }
+    }
+
+    return oss.str();
 }
