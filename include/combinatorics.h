@@ -78,6 +78,20 @@ namespace IMD
     size_t Josephus_recursive_problem(size_t k, size_t n);
     size_t Josephus_iterative_problem(size_t k, size_t n);
 
+    constexpr size_t recursive_factorial(size_t num)
+    {
+        if (num == 0 || num == 1)
+            return 1;
+        return num * recursive_factorial(num - 1);
+    }
+    constexpr size_t iterative_factorial(size_t num)
+    {
+        size_t res(1);
+        for (size_t i(2); i <= num; ++i)
+            res *= i;
+        return res;
+    }
+
 }
 
 #endif

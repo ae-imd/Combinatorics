@@ -238,8 +238,8 @@ size_t IMD::Josephus_recursive_problem(size_t k, size_t n)
 }
 size_t IMD::Josephus_iterative_problem(size_t k, size_t n)
 {
-    size_t res{0};
-    for (size_t i{2}; i <= n; ++i)
+    size_t res(0);
+    for (size_t i(2); i <= n; ++i)
         res = (res + k) % i;
     return res;
 }
