@@ -164,6 +164,82 @@ void IMD::geometric_progression::reset() noexcept
     this->__curr = this->__start;
 }
 
+IMD::Fibonacci_numbers::Fibonacci_numbers(size_t start_index) : __curr_index(0), __next(1), __curr(0)
+{
+    this->goto_index(start_index);
+}
+
+IMD::Fibonacci_numbers::Fibonacci_numbers(const Fibonacci_numbers &other)
+    : __curr_index(other.__curr_index), __next(other.__next), __curr(other.__curr) {}
+
+IMD::Fibonacci_numbers::Fibonacci_numbers(Fibonacci_numbers &&other) noexcept
+    : __curr_index(std::move(other.__curr_index)), __next(std::move(other.__next)), __curr(std::move(other.__curr)) {}
+
+IMD::Fibonacci_numbers &IMD::Fibonacci_numbers::operator=(const Fibonacci_numbers &other)
+{
+    if (this != &other)
+    {
+        this->__curr_index = other.__curr_index;
+        this->__next = other.__next;
+        this->__curr = other.__curr;
+    }
+    return *this;
+}
+
+IMD::Fibonacci_numbers &IMD::Fibonacci_numbers::operator=(Fibonacci_numbers &&other) noexcept
+{
+    this->__curr_index = std::move(other.__curr_index);
+    this->__next = std::move(other.__next);
+    this->__curr = std::move(other.__curr);
+    return *this;
+}
+
+unsigned long long IMD::Fibonacci_numbers::current() const noexcept
+{
+    return this->__curr;
+}
+
+size_t IMD::Fibonacci_numbers::index() const noexcept
+{
+    return this->__curr_index;
+}
+
+void IMD::Fibonacci_numbers::next() noexcept
+{
+    auto tmp = this->__next;
+    this->__next = this->__curr + this->__next;
+    this->__curr = tmp;
+
+    ++this->__curr_index;
+}
+
+void IMD::Fibonacci_numbers::previous() noexcept
+{
+    if (this->__curr_index == 0)
+        return;
+
+    unsigned long long prev_curr = this->__next - this->__curr;
+    this->__next = this->__curr;
+    this->__curr = prev_curr;
+    --this->__curr_index;
+}
+
+void IMD::Fibonacci_numbers::goto_index(size_t index)
+{
+    while (index != 0)
+    {
+        this->next();
+        --index;
+    }
+}
+
+void IMD::Fibonacci_numbers::reset() noexcept
+{
+    this->__curr_index = 0;
+    this->__next = 1;
+    this->__curr = 0;
+}
+
 // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
 size_t **IMD::Pascal_triangle(size_t rows_amount)
 {

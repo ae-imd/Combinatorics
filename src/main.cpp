@@ -3,7 +3,13 @@
 
 int main()
 {
-    IMD::arithmetic_progression ap(2, 3);
+    IMD::Fibonacci_numbers fn;
+
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << fn.current() << std::endl;
+        fn.next();
+    }
     std::cout << "Hello, world!" << std::endl;
 
     return 0;

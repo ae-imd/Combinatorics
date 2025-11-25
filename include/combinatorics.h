@@ -68,6 +68,29 @@ namespace IMD
         void reset() noexcept;
     };
 
+    struct Fibonacci_numbers
+    {
+    private:
+        size_t __curr_index;
+        unsigned long long __curr, __next;
+
+    public:
+        Fibonacci_numbers(size_t start_index = 0);
+        Fibonacci_numbers(const Fibonacci_numbers &other);
+        Fibonacci_numbers(Fibonacci_numbers &&other) noexcept;
+
+        Fibonacci_numbers &operator=(const Fibonacci_numbers &other);
+        Fibonacci_numbers &operator=(Fibonacci_numbers &&other) noexcept;
+
+        unsigned long long current() const noexcept;
+        size_t index() const noexcept;
+
+        void next() noexcept;
+        void previous() noexcept;
+        void goto_index(size_t index);
+        void reset() noexcept;
+    };
+
     size_t **Pascal_triangle(size_t rows);
     size_t *Pascal_triangle_row(size_t row_index);
 
