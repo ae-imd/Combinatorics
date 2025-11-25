@@ -71,9 +71,13 @@ namespace IMD
     size_t *Pascal_triangle_row(size_t row_index);
 
     // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
-    size_t binomial_coefficient_Pascal(size_t k, size_t n);
+    size_t Pascal_binomial_coefficient(size_t k, size_t n);
     // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
-    size_t binomial_coefficient_iterative(size_t k, size_t n);
+    size_t iterative_binomial_coefficient(size_t k, size_t n);
+
+    size_t Josephus_recursive_problem(size_t k, size_t n);
+    size_t Josephus_iterative_problem(size_t k, size_t n);
+
 }
 
 #endif

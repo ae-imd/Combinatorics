@@ -194,7 +194,7 @@ size_t *IMD::Pascal_triangle_row(size_t row_index)
     return res;
 }
 
-size_t IMD::binomial_coefficient_Pascal(size_t k, size_t n)
+size_t IMD::Pascal_binomial_coefficient(size_t k, size_t n)
 {
     if (k > n)
         throw std::invalid_argument("The argument 'k' is more than the argument 'n'");
@@ -210,7 +210,7 @@ size_t IMD::binomial_coefficient_Pascal(size_t k, size_t n)
     delete[] tmp;
     return res;
 }
-size_t binomial_coefficient_iterative(size_t k, size_t n)
+size_t IMD::iterative_binomial_coefficient(size_t k, size_t n)
 {
     if (k > n)
         throw std::invalid_argument("The argument 'k' is more than the argument 'n'");
@@ -227,5 +227,19 @@ size_t binomial_coefficient_iterative(size_t k, size_t n)
         res *= (n - k + i);
         res /= i;
     }
+    return res;
+}
+
+size_t IMD::Josephus_recursive_problem(size_t k, size_t n)
+{
+    if (n == 1)
+        return 0;
+    return (Josephus_recursive_problem(k, n - 1) + k) % n;
+}
+size_t IMD::Josephus_iterative_problem(size_t k, size_t n)
+{
+    size_t res{0};
+    for (size_t i{2}; i <= n; ++i)
+        res = (res + k) % i;
     return res;
 }
