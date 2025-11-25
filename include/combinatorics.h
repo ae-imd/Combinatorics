@@ -6,88 +6,95 @@
 
 namespace IMD
 {
-    constexpr double EPSILON(1e-12);
-
     struct arithmetic_progression
     {
+    public:
+        using index_type = size_t;
+        using element_type = double;
+
     private:
-        double __start;
-        double __curr;
-        double __step;
+        element_type __start, __curr, __step;
+        index_type __curr_index;
 
     public:
-        arithmetic_progression(double start, double step);
+        arithmetic_progression(element_type start, element_type step);
         arithmetic_progression(const arithmetic_progression &other);
         arithmetic_progression(arithmetic_progression &&other) noexcept;
 
         arithmetic_progression &operator=(const arithmetic_progression &other);
         arithmetic_progression &operator=(arithmetic_progression &&other) noexcept;
 
-        double current() const noexcept;
-        double start() const noexcept;
-        double step() const noexcept;
+        element_type current() const noexcept;
+        element_type start() const noexcept;
+        element_type step() const noexcept;
+        index_type index() const noexcept;
 
         void next() noexcept;
         void previous() noexcept;
 
-        void forward(size_t offset);
-        void back(size_t offset);
-
-        void move(long offset);
+        void forward(index_type offset) noexcept;
+        void back(index_type offset) noexcept;
 
         void reset() noexcept;
     };
 
     struct geometric_progression
     {
+    public:
+        using index_type = size_t;
+        using element_type = double;
+
     private:
-        double __start;
-        double __curr;
-        double __ratio;
+        element_type __start, __curr, __ratio;
+        index_type __curr_index;
 
     public:
-        geometric_progression(double start, double ratio);
+        geometric_progression(element_type start, element_type ratio);
         geometric_progression(const geometric_progression &other);
         geometric_progression(geometric_progression &&other) noexcept;
 
         geometric_progression &operator=(const geometric_progression &other);
         geometric_progression &operator=(geometric_progression &&other) noexcept;
 
-        double current() const noexcept;
-        double start() const noexcept;
-        double ratio() const noexcept;
+        element_type current() const noexcept;
+        element_type start() const noexcept;
+        element_type ratio() const noexcept;
+        index_type index() const noexcept;
 
         void next() noexcept;
         void previous() noexcept;
 
-        void forward(size_t offset);
-        void back(size_t offset);
-
-        void move(long offset);
+        void forward(index_type offset) noexcept;
+        void back(index_type offset) noexcept;
 
         void reset() noexcept;
     };
 
     struct Fibonacci_numbers
     {
+    public:
+        using index_type = std::size_t;
+        using element_type = long;
+
     private:
-        size_t __curr_index;
-        unsigned long long __curr, __next;
+        index_type __curr_index;
+        element_type __curr, __next;
 
     public:
-        Fibonacci_numbers(size_t start_index = 0);
+        Fibonacci_numbers(index_type start_index = 0);
+
         Fibonacci_numbers(const Fibonacci_numbers &other);
         Fibonacci_numbers(Fibonacci_numbers &&other) noexcept;
-
         Fibonacci_numbers &operator=(const Fibonacci_numbers &other);
         Fibonacci_numbers &operator=(Fibonacci_numbers &&other) noexcept;
 
-        unsigned long long current() const noexcept;
-        size_t index() const noexcept;
+        element_type current() const noexcept;
+        index_type index() const noexcept;
 
         void next() noexcept;
         void previous() noexcept;
-        void goto_index(size_t index);
+        void goto_index(index_type index) noexcept;
+
         void reset() noexcept;
     };
 

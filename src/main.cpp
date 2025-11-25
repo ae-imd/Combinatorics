@@ -3,7 +3,7 @@
 
 int main()
 {
-    IMD::Fibonacci_numbers fn;
+    IMD::Fibonacci_numbers fn(5);
 
     for (int i = 0; i < 10; ++i)
     {

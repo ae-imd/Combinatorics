@@ -4,14 +4,14 @@
 #include <tuple>
 #include "../include/combinatorics.h"
 
-IMD::arithmetic_progression::arithmetic_progression(double start, double step)
-    : __start(start), __curr(start), __step(step) {}
+IMD::arithmetic_progression::arithmetic_progression(element_type start, element_type step)
+    : __start(start), __curr(start), __step(step), __curr_index(0) {}
 
 IMD::arithmetic_progression::arithmetic_progression(const IMD::arithmetic_progression &other)
-    : __start(other.__start), __step(other.__step), __curr(other.__curr) {}
+    : __start(other.__start), __step(other.__step), __curr(other.__curr), __curr_index(other.__curr_index) {}
 
 IMD::arithmetic_progression::arithmetic_progression(IMD::arithmetic_progression &&other) noexcept
-    : __start(std::move(other.__start)), __step(std::move(other.__step)), __curr(std::move(other.__curr)) {}
+    : __start(std::move(other.__start)), __step(std::move(other.__step)), __curr(std::move(other.__curr)), __curr_index(std::move(other.__curr_index)) {}
 
 IMD::arithmetic_progression &IMD::arithmetic_progression::operator=(const IMD::arithmetic_progression &other)
 {
@@ -20,6 +20,7 @@ IMD::arithmetic_progression &IMD::arithmetic_progression::operator=(const IMD::a
         this->__start = other.__start;
         this->__step = other.__step;
         this->__curr = other.__curr;
+        this->__curr_index = other.__curr_index;
     }
     return *this;
 }
@@ -29,34 +30,41 @@ IMD::arithmetic_progression &IMD::arithmetic_progression::operator=(IMD::arithme
     this->__start = std::move(other.__start);
     this->__step = std::move(other.__step);
     this->__curr = std::move(other.__curr);
+    this->__curr_index = std::move(other.__curr_index);
     return *this;
 }
 
-double IMD::arithmetic_progression::current() const noexcept
+IMD::arithmetic_progression::element_type IMD::arithmetic_progression::current() const noexcept
 {
     return this->__curr;
 }
-double IMD::arithmetic_progression::start() const noexcept
+IMD::arithmetic_progression::element_type IMD::arithmetic_progression::start() const noexcept
 {
     return this->__start;
 }
-double IMD::arithmetic_progression::step() const noexcept
+IMD::arithmetic_progression::element_type IMD::arithmetic_progression::step() const noexcept
 {
     return this->__step;
+}
+IMD::arithmetic_progression::index_type IMD::arithmetic_progression::index() const noexcept
+{
+    return this->__curr_index;
 }
 
 void IMD::arithmetic_progression::next() noexcept
 {
     this->__curr += this->__step;
+    ++this->__curr_index;
 }
 void IMD::arithmetic_progression::previous() noexcept
 {
-    if (std::abs(this->__curr - this->__start) < EPSILON)
+    if (this->__curr_index == 0)
         return;
 
     this->__curr -= this->__step;
+    --this->__curr_index;
 }
-void IMD::arithmetic_progression::forward(size_t offset)
+void IMD::arithmetic_progression::forward(index_type offset) noexcept
 {
     while (offset != 0)
     {
@@ -64,7 +72,7 @@ void IMD::arithmetic_progression::forward(size_t offset)
         --offset;
     }
 }
-void IMD::arithmetic_progression::back(size_t offset)
+void IMD::arithmetic_progression::back(index_type offset) noexcept
 {
     while (offset != 0)
     {
@@ -72,20 +80,13 @@ void IMD::arithmetic_progression::back(size_t offset)
         --offset;
     }
 }
-void IMD::arithmetic_progression::move(long offset)
-{
-    if (offset < 0)
-        back(-offset);
-    else
-        forward(offset);
-}
 
 void IMD::arithmetic_progression::reset() noexcept
 {
     this->__curr = this->__start;
 }
 
-IMD::geometric_progression::geometric_progression(double start, double ratio)
+IMD::geometric_progression::geometric_progression(element_type start, element_type ratio)
     : __start(start), __curr(start), __ratio(ratio) {}
 
 IMD::geometric_progression::geometric_progression(const geometric_progression &other)
@@ -113,30 +114,37 @@ IMD::geometric_progression &IMD::geometric_progression::operator=(IMD::geometric
     return *this;
 }
 
-double IMD::geometric_progression::current() const noexcept
+IMD::geometric_progression::element_type IMD::geometric_progression::current() const noexcept
 {
     return this->__curr;
 }
-double IMD::geometric_progression::start() const noexcept
+IMD::geometric_progression::element_type IMD::geometric_progression::start() const noexcept
 {
     return this->__start;
 }
-double IMD::geometric_progression::ratio() const noexcept
+IMD::geometric_progression::element_type IMD::geometric_progression::ratio() const noexcept
 {
     return this->__ratio;
 }
+IMD::geometric_progression::index_type IMD::geometric_progression::index() const noexcept
+{
+    return this->__curr_index;
+}
+
 void IMD::geometric_progression::next() noexcept
 {
     this->__curr *= this->__ratio;
+    ++this->__curr_index;
 }
 void IMD::geometric_progression::previous() noexcept
 {
-    if (std::abs(this->__curr - this->__start) < EPSILON)
+    if (this->__curr_index == 0)
         return;
 
     this->__curr /= this->__ratio;
+    --this->__curr_index;
 }
-void IMD::geometric_progression::forward(size_t offset)
+void IMD::geometric_progression::forward(index_type offset) noexcept
 {
     while (offset != 0)
     {
@@ -144,7 +152,7 @@ void IMD::geometric_progression::forward(size_t offset)
         --offset;
     }
 }
-void IMD::geometric_progression::back(size_t offset)
+void IMD::geometric_progression::back(index_type offset) noexcept
 {
     while (offset != 0)
     {
@@ -152,36 +160,32 @@ void IMD::geometric_progression::back(size_t offset)
         --offset;
     }
 }
-void IMD::geometric_progression::move(long offset)
-{
-    if (offset < 0)
-        back(-offset);
-    else
-        forward(offset);
-}
 void IMD::geometric_progression::reset() noexcept
 {
     this->__curr = this->__start;
 }
 
-IMD::Fibonacci_numbers::Fibonacci_numbers(size_t start_index) : __curr_index(0), __next(1), __curr(0)
+IMD::Fibonacci_numbers::Fibonacci_numbers(IMD::Fibonacci_numbers::index_type start_index)
+    : __curr_index(0), __curr(0), __next(1)
 {
     this->goto_index(start_index);
 }
 
 IMD::Fibonacci_numbers::Fibonacci_numbers(const Fibonacci_numbers &other)
-    : __curr_index(other.__curr_index), __next(other.__next), __curr(other.__curr) {}
+    : __curr_index(other.__curr_index), __curr(other.__curr), __next(other.__next) {}
 
 IMD::Fibonacci_numbers::Fibonacci_numbers(Fibonacci_numbers &&other) noexcept
-    : __curr_index(std::move(other.__curr_index)), __next(std::move(other.__next)), __curr(std::move(other.__curr)) {}
+    : __curr_index(std::move(other.__curr_index)),
+      __curr(std::move(other.__curr)),
+      __next(std::move(other.__next)) {}
 
 IMD::Fibonacci_numbers &IMD::Fibonacci_numbers::operator=(const Fibonacci_numbers &other)
 {
     if (this != &other)
     {
         this->__curr_index = other.__curr_index;
-        this->__next = other.__next;
         this->__curr = other.__curr;
+        this->__next = other.__next;
     }
     return *this;
 }
@@ -189,55 +193,63 @@ IMD::Fibonacci_numbers &IMD::Fibonacci_numbers::operator=(const Fibonacci_number
 IMD::Fibonacci_numbers &IMD::Fibonacci_numbers::operator=(Fibonacci_numbers &&other) noexcept
 {
     this->__curr_index = std::move(other.__curr_index);
-    this->__next = std::move(other.__next);
     this->__curr = std::move(other.__curr);
+    this->__next = std::move(other.__next);
     return *this;
 }
-
-unsigned long long IMD::Fibonacci_numbers::current() const noexcept
+IMD::Fibonacci_numbers::element_type IMD::Fibonacci_numbers::current() const noexcept
 {
     return this->__curr;
 }
-
-size_t IMD::Fibonacci_numbers::index() const noexcept
+void IMD::Fibonacci_numbers::next() noexcept
+{
+    element_type tmp = this->__next;
+    this->__next += this->__curr;
+    this->__curr = tmp;
+    ++this->__curr_index;
+}
+void IMD::Fibonacci_numbers::previous() noexcept
+{
+    if (this->__curr_index <= 1)
+    {
+        this->__curr = 0;
+        this->__next = 1;
+        this->__curr_index = 0;
+    }
+    else
+    {
+        element_type prev_curr = this->__next - this->__curr;
+        this->__next = this->__curr;
+        this->__curr = prev_curr;
+        --this->__curr_index;
+    }
+}
+IMD::Fibonacci_numbers::index_type IMD::Fibonacci_numbers::index() const noexcept
 {
     return this->__curr_index;
 }
 
-void IMD::Fibonacci_numbers::next() noexcept
+void IMD::Fibonacci_numbers::goto_index(index_type index) noexcept
 {
-    auto tmp = this->__next;
-    this->__next = this->__curr + this->__next;
-    this->__curr = tmp;
-
-    ++this->__curr_index;
-}
-
-void IMD::Fibonacci_numbers::previous() noexcept
-{
-    if (this->__curr_index == 0)
+    if (index == this->__curr_index)
         return;
 
-    unsigned long long prev_curr = this->__next - this->__curr;
-    this->__next = this->__curr;
-    this->__curr = prev_curr;
-    --this->__curr_index;
-}
+    if (index < this->__curr_index)
+    {
+        this->reset();
+    }
 
-void IMD::Fibonacci_numbers::goto_index(size_t index)
-{
-    while (index != 0)
+    while (this->__curr_index < index)
     {
         this->next();
-        --index;
     }
 }
 
 void IMD::Fibonacci_numbers::reset() noexcept
 {
-    this->__curr_index = 0;
-    this->__next = 1;
     this->__curr = 0;
+    this->__next = 1;
+    this->__curr_index = 0;
 }
 
 // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
