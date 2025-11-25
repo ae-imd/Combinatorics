@@ -3,9 +3,7 @@
 
 int main()
 {
-    IMD::geometric_progression gp(2, 3);
-    gp.next();
-    std::cout << gp.current() << std::endl;
+    IMD::arithmetic_progression ap(2, 3);
     std::cout << "Hello, world!" << std::endl;
 
     return 0;

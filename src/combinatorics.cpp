@@ -1,181 +1,167 @@
+#include <stdexcept>
 #include "../include/combinatorics.h"
 
-struct IMD::arithmetic_progression
+IMD::arithmetic_progression::arithmetic_progression(double start, double step)
+    : __start(start), __curr(start), __step(step) {}
+
+IMD::arithmetic_progression::arithmetic_progression(const IMD::arithmetic_progression &other)
+    : __start(other.__start), __step(other.__step), __curr(other.__curr) {}
+
+IMD::arithmetic_progression::arithmetic_progression(IMD::arithmetic_progression &&other) noexcept
+    : __start(std::move(other.__start)), __step(std::move(other.__step)), __curr(std::move(other.__curr)) {}
+
+IMD::arithmetic_progression &IMD::arithmetic_progression::operator=(const IMD::arithmetic_progression &other)
 {
-private:
-    double __start;
-    double __curr;
-    double __step;
+    if (this != &other)
+    {
+        this->__start = other.__start;
+        this->__step = other.__step;
+        this->__curr = other.__curr;
+    }
+    return *this;
+}
 
-public:
-    arithmetic_progression(double start, double step)
-    {
-        this->__start = start;
-        this->__step = step;
-        this->__curr = start;
-    }
-
-    arithmetic_progression(const arithmetic_progression &ap)
-    {
-        this->__start = ap.__start;
-        this->__step = ap.__step;
-        this->__curr = ap.__curr;
-    }
-
-    arithmetic_progression(arithmetic_progression &&ap)
-    {
-        this->__start = std::move(ap.__start);
-        this->__step = std::move(ap.__step);
-        this->__curr = std::move(ap.__curr);
-    }
-
-    arithmetic_progression &operator=(const arithmetic_progression &other)
-    {
-        if (this != &other)
-        {
-            this->__start = other.__start;
-            this->__step = other.__step;
-            this->__curr = other.__curr;
-        }
-        return *this;
-    }
-
-    arithmetic_progression &operator=(arithmetic_progression &&other)
-    {
-        this->__start = std::move(other.__start);
-        this->__step = std::move(other.__step);
-        this->__curr = std::move(other.__curr);
-        return *this;
-    }
-
-    double current() noexcept
-    {
-        return this->__curr;
-    }
-    void next() noexcept
-    {
-        this->__curr += this->__step;
-    }
-    void previous() noexcept
-    {
-        if (std::abs(this->__curr - this->__start) < EPSILON)
-            return;
-
-        this->__curr -= this->__step;
-    }
-    void forward(size_t offset)
-    {
-        while (offset != 0)
-        {
-            this->next();
-            --offset;
-        }
-    }
-    void back(size_t offset)
-    {
-        while (offset != 0)
-        {
-            this->previous();
-            --offset;
-        }
-    }
-    void move(long offset)
-    {
-        if (offset < 0)
-            back(-offset);
-        else
-            forward(offset);
-    }
-};
-
-struct IMD::geometric_progression
+IMD::arithmetic_progression &IMD::arithmetic_progression::operator=(IMD::arithmetic_progression &&other) noexcept
 {
-private:
-    double __start;
-    double __curr;
-    double __step;
+    this->__start = std::move(other.__start);
+    this->__step = std::move(other.__step);
+    this->__curr = std::move(other.__curr);
+    return *this;
+}
 
-public:
-    geometric_progression(double start, double step)
-    {
-        this->__start = start;
-        this->__step = step;
-        this->__curr = start;
-    }
+double IMD::arithmetic_progression::current() const noexcept
+{
+    return this->__curr;
+}
+double IMD::arithmetic_progression::start() const noexcept
+{
+    return this->__start;
+}
+double IMD::arithmetic_progression::step() const noexcept
+{
+    return this->__step;
+}
 
-    geometric_progression(const geometric_progression &ap)
-    {
-        this->__start = ap.__start;
-        this->__step = ap.__step;
-        this->__curr = ap.__curr;
-    }
+void IMD::arithmetic_progression::next() noexcept
+{
+    this->__curr += this->__step;
+}
+void IMD::arithmetic_progression::previous() noexcept
+{
+    if (std::abs(this->__curr - this->__start) < EPSILON)
+        return;
 
-    geometric_progression(geometric_progression &&ap)
+    this->__curr -= this->__step;
+}
+void IMD::arithmetic_progression::forward(size_t offset)
+{
+    while (offset != 0)
     {
-        this->__start = std::move(ap.__start);
-        this->__step = std::move(ap.__step);
-        this->__curr = std::move(ap.__curr);
+        this->next();
+        --offset;
     }
+}
+void IMD::arithmetic_progression::back(size_t offset)
+{
+    while (offset != 0)
+    {
+        this->previous();
+        --offset;
+    }
+}
+void IMD::arithmetic_progression::move(long offset)
+{
+    if (offset < 0)
+        back(-offset);
+    else
+        forward(offset);
+}
 
-    geometric_progression &operator=(const geometric_progression &other)
-    {
-        if (this != &other)
-        {
-            this->__start = other.__start;
-            this->__step = other.__step;
-            this->__curr = other.__curr;
-        }
-        return *this;
-    }
+void IMD::arithmetic_progression::reset() noexcept
+{
+    this->__curr = this->__start;
+}
 
-    geometric_progression &operator=(geometric_progression &&other)
-    {
-        this->__start = std::move(other.__start);
-        this->__step = std::move(other.__step);
-        this->__curr = std::move(other.__curr);
-        return *this;
-    }
+IMD::geometric_progression::geometric_progression(double start, double ratio)
+    : __start(start), __curr(start), __ratio(ratio) {}
 
-    double current() noexcept
-    {
-        return this->__curr;
-    }
-    void next() noexcept
-    {
-        this->__curr *= this->__step;
-    }
-    void previous() noexcept
-    {
-        if (std::abs(this->__curr - this->__start) < EPSILON)
-            return;
+IMD::geometric_progression::geometric_progression(const geometric_progression &other)
+    : __start(other.__start), __ratio(other.__ratio), __curr(other.__curr) {}
 
-        this->__curr /= this->__step;
-    }
-    void forward(size_t offset)
-    {
-        while (offset != 0)
-        {
-            this->next();
-            --offset;
-        }
-    }
-    void back(size_t offset)
-    {
-        while (offset != 0)
-        {
-            this->previous();
-            --offset;
-        }
-    }
-    void move(long offset)
-    {
-        if (offset < 0)
-            back(-offset);
-        else
-            forward(offset);
-    }
-};
+IMD::geometric_progression::geometric_progression(geometric_progression &&other) noexcept
+    : __start(other.__start), __ratio(other.__ratio), __curr(other.__curr) {}
 
+IMD::geometric_progression &IMD::geometric_progression::operator=(const IMD::geometric_progression &other)
+{
+    if (this != &other)
+    {
+        this->__start = other.__start;
+        this->__ratio = other.__ratio;
+        this->__curr = other.__curr;
+    }
+    return *this;
+}
+
+IMD::geometric_progression &IMD::geometric_progression::operator=(IMD::geometric_progression &&other) noexcept
+{
+    this->__start = std::move(other.__start);
+    this->__ratio = std::move(other.__ratio);
+    this->__curr = std::move(other.__curr);
+    return *this;
+}
+
+double IMD::geometric_progression::current() const noexcept
+{
+    return this->__curr;
+}
+double IMD::geometric_progression::start() const noexcept
+{
+    return this->__start;
+}
+double IMD::geometric_progression::ratio() const noexcept
+{
+    return this->__ratio;
+}
+void IMD::geometric_progression::next() noexcept
+{
+    this->__curr *= this->__ratio;
+}
+void IMD::geometric_progression::previous() noexcept
+{
+    if (std::abs(this->__curr - this->__start) < EPSILON)
+        return;
+
+    this->__curr /= this->__ratio;
+}
+void IMD::geometric_progression::forward(size_t offset)
+{
+    while (offset != 0)
+    {
+        this->next();
+        --offset;
+    }
+}
+void IMD::geometric_progression::back(size_t offset)
+{
+    while (offset != 0)
+    {
+        this->previous();
+        --offset;
+    }
+}
+void IMD::geometric_progression::move(long offset)
+{
+    if (offset < 0)
+        back(-offset);
+    else
+        forward(offset);
+}
+void IMD::geometric_progression::reset() noexcept
+{
+    this->__curr = this->__start;
+}
+
+// Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
 size_t **IMD::Pascal_triangle(size_t rows_amount)
 {
     size_t **res = new size_t *[rows_amount];
@@ -192,7 +178,7 @@ size_t **IMD::Pascal_triangle(size_t rows_amount)
     }
     return res;
 }
-
+// Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
 size_t *IMD::Pascal_triangle_row(size_t row_index)
 {
     size_t *res = new size_t[row_index + 1];
@@ -205,5 +191,41 @@ size_t *IMD::Pascal_triangle_row(size_t row_index)
             res[j] = res[j] + res[j - 1];
     }
 
+    return res;
+}
+
+size_t IMD::binomial_coefficient_Pascal(size_t k, size_t n)
+{
+    if (k > n)
+        throw std::invalid_argument("The argument 'k' is more than the argument 'n'");
+    if (k == 0 || k == n)
+        return 1;
+    if (k == 1)
+        return n;
+    if (k > n - k) // Optimization
+        k = n - k;
+
+    size_t *tmp = IMD::Pascal_triangle_row(n);
+    size_t res = tmp[k];
+    delete[] tmp;
+    return res;
+}
+size_t binomial_coefficient_iterative(size_t k, size_t n)
+{
+    if (k > n)
+        throw std::invalid_argument("The argument 'k' is more than the argument 'n'");
+    if (k == 0 || k == n)
+        return 1;
+    if (k == 1)
+        return n;
+    if (k > n - k) // Optimization
+        k = n - k;
+
+    size_t res(1);
+    for (size_t i(1); i <= k; ++i)
+    {
+        res *= (n - k + i);
+        res /= i;
+    }
     return res;
 }
