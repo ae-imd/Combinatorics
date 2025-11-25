@@ -1,4 +1,7 @@
 #include <stdexcept>
+#include <ostream>
+#include <stack>
+#include <tuple>
 #include "../include/combinatorics.h"
 
 IMD::arithmetic_progression::arithmetic_progression(double start, double step)
@@ -242,4 +245,59 @@ size_t IMD::Josephus_iterative_problem(size_t k, size_t n)
     for (size_t i(2); i <= n; ++i)
         res = (res + k) % i;
     return res;
+}
+
+void IMD::Hanoi_classic_recursive_problem(int n, char from, char to, char aux, int &moves, std::ostream &os, const char *sep)
+{
+    if (n == 1)
+    {
+        os << "Move the " << n << " disk from " << from << " to " << to << sep;
+        ++moves;
+        return;
+    }
+    Hanoi_classic_recursive_problem(n - 1, from, aux, to, moves, os, sep);
+    os << "Move the " << n << " disk from " << from << " to " << to << sep;
+    ++moves;
+    Hanoi_classic_recursive_problem(n - 1, aux, to, from, moves, os, sep);
+}
+void IMD::Hanoi_classic_iterative_problem(int n, char from, char to, char aux, int &moves, std::ostream &os, const char *sep)
+{
+    std::stack<std::tuple<int, char, char, char>> st; // n, from, to, aux
+    st.emplace(n, from, to, aux);
+
+    while (!st.empty())
+    {
+        auto [curr_n, curr_from, curr_to, curr_aux] = st.top();
+        st.pop();
+
+        if (curr_n == 1)
+        {
+            os << "Move disk from " << curr_from << " to " << curr_to << sep;
+            ++moves;
+        }
+        else
+        {
+            st.emplace(curr_n - 1, curr_aux, curr_to, curr_from);
+            st.emplace(1, curr_from, curr_to, curr_aux);
+            st.emplace(curr_n - 1, curr_from, curr_aux, curr_to);
+        }
+    }
+}
+void IMD::Hanoi_restricted_recursive_problem(int n, char from, char to, char aux, int &moves, std::ostream &os, const char *sep)
+{
+    if (n == 1)
+    {
+        os << "Move the " << n << " disk from " << from << " to " << aux << sep;
+        os << "Move the " << n << " disk from " << aux << " to " << to << sep;
+        moves += 2;
+        return;
+    }
+
+    Hanoi_restricted_recursive_problem(n - 1, from, to, aux, moves, os, sep);
+    os << "Move the " << n << " disk from " << from << " to " << aux << sep;
+    ++moves;
+    Hanoi_restricted_recursive_problem(n - 1, to, from, aux, moves, os, sep);
+    os << "Move the " << n << " disk from " << aux << " to " << to << sep;
+    ++moves;
+    Hanoi_restricted_recursive_problem(n - 1, from, to, aux, moves, os, sep);
 }

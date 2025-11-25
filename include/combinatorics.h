@@ -2,6 +2,7 @@
 #define __IMD_COMBINATORICS_
 
 #include <cmath>
+#include <iostream>
 
 namespace IMD
 {
@@ -91,6 +92,10 @@ namespace IMD
             res *= i;
         return res;
     }
+
+    void Hanoi_classic_recursive_problem(int n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
+    void Hanoi_classic_iterative_problem(int n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
+    void Hanoi_restricted_recursive_problem(int n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
 
 }
 
