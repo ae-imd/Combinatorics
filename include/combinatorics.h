@@ -24,6 +24,9 @@ namespace IMD
         arithmetic_progression &operator=(const arithmetic_progression &other);
         arithmetic_progression &operator=(arithmetic_progression &&other) noexcept;
 
+        bool operator==(const arithmetic_progression &other);
+        bool operator!=(const arithmetic_progression &other);
+
         element_type current() const noexcept;
         element_type start() const noexcept;
         element_type step() const noexcept;
@@ -56,6 +59,9 @@ namespace IMD
         geometric_progression &operator=(const geometric_progression &other);
         geometric_progression &operator=(geometric_progression &&other) noexcept;
 
+        bool operator==(const geometric_progression &other);
+        bool operator!=(const geometric_progression &other);
+
         element_type current() const noexcept;
         element_type start() const noexcept;
         element_type ratio() const noexcept;
@@ -85,8 +91,12 @@ namespace IMD
 
         Fibonacci_numbers(const Fibonacci_numbers &other);
         Fibonacci_numbers(Fibonacci_numbers &&other) noexcept;
+
         Fibonacci_numbers &operator=(const Fibonacci_numbers &other);
         Fibonacci_numbers &operator=(Fibonacci_numbers &&other) noexcept;
+
+        bool operator==(const Fibonacci_numbers &other);
+        bool operator!=(const Fibonacci_numbers &other);
 
         element_type current() const noexcept;
         index_type index() const noexcept;
@@ -98,7 +108,71 @@ namespace IMD
         void reset() noexcept;
     };
 
-    size_t **Pascal_triangle(size_t rows);
+    struct Luka_numbers
+    {
+    public:
+        using index_type = std::size_t;
+        using element_type = long;
+
+    private:
+        index_type __curr_index;
+        element_type __curr, __next;
+
+    public:
+        Luka_numbers(index_type start_index = 0);
+
+        Luka_numbers(const Luka_numbers &other);
+        Luka_numbers(Luka_numbers &&other) noexcept;
+
+        Luka_numbers &operator=(const Luka_numbers &other);
+        Luka_numbers &operator=(Luka_numbers &&other) noexcept;
+
+        bool operator==(const Luka_numbers &other);
+        bool operator!=(const Luka_numbers &other);
+
+        element_type current() const noexcept;
+        index_type index() const noexcept;
+
+        void next() noexcept;
+        void previous() noexcept;
+        void goto_index(index_type index) noexcept;
+
+        void reset() noexcept;
+    };
+
+    struct Catalan_numbers
+    {
+    public:
+        using index_type = std::size_t;
+        using element_type = long long; // Используем long long для больших чисел
+
+    private:
+        index_type __curr_index;
+        element_type __curr;
+
+    public:
+        Catalan_numbers(index_type start_index = 0);
+
+        Catalan_numbers(const Catalan_numbers &other);
+        Catalan_numbers(Catalan_numbers &&other) noexcept;
+
+        Catalan_numbers &operator=(const Catalan_numbers &other);
+        Catalan_numbers &operator=(Catalan_numbers &&other) noexcept;
+
+        bool operator==(const Catalan_numbers &other);
+        bool operator!=(const Catalan_numbers &other);
+
+        element_type current() const noexcept;
+        index_type index() const noexcept;
+
+        void next() noexcept;
+        void previous() noexcept;
+        void goto_index(index_type index) noexcept;
+
+        void reset() noexcept;
+    };
+
+    size_t **Pascal_triangle(size_t rows_amount);
     size_t *Pascal_triangle_row(size_t row_index);
 
     // Warning: if the methods is called, then dinamic memory will be allocated - don't forget to free it
@@ -123,9 +197,9 @@ namespace IMD
         return res;
     }
 
-    void Hanoi_classic_recursive_problem(int n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
-    void Hanoi_classic_iterative_problem(int n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
-    void Hanoi_restricted_recursive_problem(int n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
+    void Hanoi_classic_recursive_problem(size_t n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
+    void Hanoi_classic_iterative_problem(size_t n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
+    void Hanoi_restricted_recursive_problem(size_t n, char from, char to, char aux, int &moves, std::ostream &os = std::cout, const char *sep = " ");
 
 }
 
